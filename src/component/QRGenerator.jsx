@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
 function QRGenerator() {
-  const [text, setText] = useState("");
 
-  // ✅ ADD THIS FUNCTION INSIDE THE COMPONENT
+  const bankDetails = `Account Name: Adetoyese Adeniran
+Account Number: 9015723473
+Bank: OPay`;
+
   const downloadQR = () => {
     const canvas = document.querySelector("canvas");
-
     if (!canvas) return;
 
     const pngUrl = canvas
@@ -16,36 +17,25 @@ function QRGenerator() {
 
     const downloadLink = document.createElement("a");
     downloadLink.href = pngUrl;
-    downloadLink.download = "qr-code.png";
+    downloadLink.download = "Adetoyese-Bank-QR.png";
     downloadLink.click();
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Enter text or URL"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
+    <div style={{ textAlign: "center" }}>
+      <h3>Scan to Transfer</h3>
+
+      <QRCodeCanvas
+        value={bankDetails}
+        size={220}
+        includeMargin
       />
 
       <br /><br />
 
-      {text && (
-        <>
-          <QRCodeCanvas
-            value={text}
-            size={200}
-            includeMargin
-          />
-
-          <br /><br />
-
-          <button onClick={downloadQR}>
-            Download QR Code
-          </button>
-        </>
-      )}
+      <button onClick={downloadQR}>
+        Download QR Code
+      </button>
     </div>
   );
 }

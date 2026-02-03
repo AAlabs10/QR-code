@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>My QR Code</h2>
+      {/* <h2>My QR Code</h2> */}
 
       {/* <QRCodeCanvas
         value="https://example.com"
