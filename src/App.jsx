@@ -1,8 +1,9 @@
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 import QRGenerator from "./component/QRGenerator";
 import { QRCodeSVG } from "qrcode.react";
-import QRScanner from "./component/QRScanner";
+import QRScanner from "./part/QRScanner";
 
 function App() {
 
@@ -31,8 +32,12 @@ function App() {
         includeMargin={true}
       /> */}
       
-      <QRGenerator />
-      <QRScanner />
+      <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<QRGenerator />} />
+        <Route path="/QRScanner" element={<QRScanner />} />
+      </Routes>
+    </BrowserRouter>
       
     </div>
   );

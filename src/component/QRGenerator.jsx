@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
+import { useNavigate } from "react-router-dom";
 
 function QRGenerator() {
+  const navigate = useNavigate(); // ✅ Add this
+
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -142,6 +146,14 @@ const qrData = JSON.stringify({
 
 
           <button onClick={handleGenerateQR}>Generate QR Code</button>
+           <br /><br />
+
+      <button
+      onClick={() => navigate("/QRScanner")}
+      style={{ backgroundColor: "#333", color: "#fff" }}
+       >
+      Scan Code
+      </button>
         </>
       )}
 
@@ -152,6 +164,16 @@ const qrData = JSON.stringify({
           <br /><br />
           <p><strong>Expires on:</strong> {formData.expDate}</p>
           <button onClick={handleNewQR}>Generate New QR</button>
+
+        <br /><br />
+
+      <button
+      onClick={() => navigate("/QRScanner")}
+      style={{ backgroundColor: "#333", color: "#fff" }}
+       >
+      Scan Code
+      </button>
+
         </>
       )}
     </div>

@@ -5,9 +5,11 @@ function QRScanner() {
   const [scanResult, setScanResult] = useState(null);
   const [status, setStatus] = useState("");
 
-  const isExpired = (expDate) => {
-    return new Date() > new Date(expDate);
-  };
+const isExpired = (expDate) => {
+  const today = new Date();
+  const expiration = new Date(expDate + "T23:59:59"); 
+  return today > expiration;
+};
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -23,14 +25,17 @@ function QRScanner() {
       (decodedText) => {
         try {
           const parsed = JSON.parse(decodedText);
+        if (isExpired(parsed.expirationDate)) {
+         setStatus("❌ QR Code Expired");
+          setScanResult(null);
+         } else {
+            const today = new Date();
+            const exp = new Date(parsed.expirationDate + "T23:59:59");
+            const diff = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
+            setStatus(`✅ QR Code Valid — ${diff} day(s) left`);
+             setScanResult(parsed);
+             }
 
-          if (isExpired(parsed.expirationDate)) {
-            setStatus("❌ QR Code Expired");
-            setScanResult(null);
-          } else {
-            setStatus("✅ QR Code Valid");
-            setScanResult(parsed);
-          }
 
           scanner.clear(); // stop scanning after success
         } catch {
