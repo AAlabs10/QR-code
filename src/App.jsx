@@ -2,6 +2,7 @@ import React from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import QRGenerator from "./component/QRGenerator";
 import { QRCodeSVG } from "qrcode.react";
+import QRScanner from "./component/QRScanner";
 
 function App() {
 
@@ -31,6 +32,8 @@ function App() {
       /> */}
       
       <QRGenerator />
+      <QRScanner />
+      
     </div>
   );
 }

@@ -8,6 +8,7 @@ function QRGenerator() {
     phone: "",
     plate: "",
     serial: "",
+    expDate: "",
   });
 
   const [showQR, setShowQR] = useState(false);
@@ -37,6 +38,7 @@ function QRGenerator() {
       newErrors.plate = "Plate must be like ABC-123-XY";
 
     if (!formData.serial.trim()) newErrors.serial = "Serial number required";
+    if (!formData.expDate) newErrors.expDate = "Expiration date required";
 
     setErrors(newErrors);
 
@@ -58,18 +60,20 @@ function QRGenerator() {
       phone: "",
       plate: "",
       serial: "",
+      expDate: "",
     });
     setErrors({});
     setShowQR(false);
   };
 
-  const qrData = `
-Owner Name: ${formData.name}
-Address: ${formData.address}
-Phone Number: ${formData.phone}
-Plate Number: ${formData.plate}
-Serial Number: ${formData.serial}
-`;
+const qrData = JSON.stringify({
+  ownerName: formData.name,
+  address: formData.address,
+  phone: formData.phone,
+  plateNumber: formData.plate.toUpperCase(),
+  serialNumber: formData.serial,
+  expirationDate: formData.expDate,
+});
 
   return (
     <div style={{ maxWidth: 450, margin: "auto", textAlign: "center" }}>
@@ -128,6 +132,15 @@ Serial Number: ${formData.serial}
           <div style={{ color: "red" }}>{errors.serial}</div>
           <br /><br />
 
+           <input
+            type="date"
+            name="expDate"
+            onChange={handleChange}
+          />
+          <div style={{ color: "red" }}>{errors.expDate}</div>
+          <br /><br />
+
+
           <button onClick={handleGenerateQR}>Generate QR Code</button>
         </>
       )}
@@ -137,6 +150,7 @@ Serial Number: ${formData.serial}
         <>
           <QRCodeCanvas value={qrData} size={240} includeMargin />
           <br /><br />
+          <p><strong>Expires on:</strong> {formData.expDate}</p>
           <button onClick={handleNewQR}>Generate New QR</button>
         </>
       )}
