@@ -32,12 +32,7 @@ const isExpired = (expDate) => {
             const today = new Date();
             const exp = new Date(parsed.expirationDate + "T23:59:59");
             const diff = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
-            const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
-            const diffMinutes = Math.floor((diffTime / (1000 * 60)) % 60);
             setStatus(`✅ QR Code Valid — ${diff} day(s) left`);
-            setStatus(
-            `✅ QR Code Valid — ${diffHours}h ${diffMinutes}m left`
-            )
              setScanResult(parsed);
              }
 
