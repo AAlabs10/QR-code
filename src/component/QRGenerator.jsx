@@ -4,7 +4,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import { useNavigate } from "react-router-dom";
 
 function QRGenerator() {
-  const navigate = useNavigate(); // ✅ Add this
+  const navigate = useNavigate(); 
 
   const [formData, setFormData] = useState({
     name: "",
@@ -18,7 +18,7 @@ function QRGenerator() {
   const [showQR, setShowQR] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Handle input changes
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,20 +26,18 @@ function QRGenerator() {
     });
   };
 
-  // Validate form
+
   const validateForm = () => {
     const newErrors = {};
     
     if (!formData.name.trim()) newErrors.name = "Owner name required";
     if (!formData.address.trim()) newErrors.address = "Address required";
 
-    // Phone validation: exactly 11 digits
     if (!/^\d{11}$/.test(formData.phone))
       newErrors.phone = "Phone must be 11 digits";
 
-    // Plate validation: format ABC-123-XY
-    if (!/^[A-Z]{3}-\d{3}-[A-Z]{2}$/i.test(formData.plate))
-      newErrors.plate = "Plate must be like ABC-123-XY";
+    if (!/^[A-Z]{3}-\d{3}-[A-Z]{3}$/i.test(formData.plate))
+      newErrors.plate = "Plate must be like ABC-123-XYZ";
 
     if (!formData.serial.trim()) newErrors.serial = "Serial number required";
     if (!formData.expDate) newErrors.expDate = "Expiration date required";
@@ -49,14 +47,12 @@ function QRGenerator() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Generate QR button click
   const handleGenerateQR = () => {
     if (validateForm()) {
       setShowQR(true);
     }
   };
 
-  // Generate new QR → reset form
   const handleNewQR = () => {
     setFormData({
       name: "",
@@ -70,20 +66,20 @@ function QRGenerator() {
     setShowQR(false);
   };
 
-const qrData = JSON.stringify({
-  ownerName: formData.name,
-  address: formData.address,
-  phone: formData.phone,
-  plateNumber: formData.plate.toUpperCase(),
-  serialNumber: formData.serial,
-  expirationDate: formData.expDate,
-});
+const qrData = `
+Owner Name: ${formData.name}
+Address: ${formData.address}
+Phone Number: ${formData.phone}
+Plate Number: ${formData.plate.toUpperCase()}
+Serial Number: ${formData.serial}
+Expiration Date: ${formData.expDate}
+`.trim();
 
   return (
     <div style={{ maxWidth: 450, margin: "auto", textAlign: "center" }}>
       <h2>Owner QR Code Generator</h2>
 
-      {/* INPUT FORM */}
+      
       {!showQR && (
         <>
           <input
@@ -157,7 +153,7 @@ const qrData = JSON.stringify({
         </>
       )}
 
-      {/* QR CODE */}
+
       {showQR && (
         <>
           <QRCodeCanvas value={qrData} size={240} includeMargin />

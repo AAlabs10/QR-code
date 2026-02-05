@@ -1,15 +1,15 @@
- import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
 function QRScanner() {
   const [scanResult, setScanResult] = useState(null);
   const [status, setStatus] = useState("");
 
-const isExpired = (expDate) => {
-  const today = new Date();
-  const expiration = new Date(expDate + "T23:59:59"); 
-  return today > expiration;
-};
+  const isExpired = (expDate) => {
+    const today = new Date();
+    const expiration = new Date(expDate + "T23:59:59"); 
+    return today > expiration;
+  };
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -23,24 +23,46 @@ const isExpired = (expDate) => {
 
     scanner.render(
       (decodedText) => {
+        let parsedData = null;
+
+        // 1️⃣ Try JSON (old format)
         try {
-          const parsed = JSON.parse(decodedText);
-        if (isExpired(parsed.expirationDate)) {
-         setStatus("❌ QR Code Expired");
-          setScanResult(null);
-         } else {
-            const today = new Date();
-            const exp = new Date(parsed.expirationDate + "T23:59:59");
-            const diff = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
-            setStatus(`✅ QR Code Valid — ${diff} day(s) left`);
-             setScanResult(parsed);
-             }
-
-
-          scanner.clear(); // stop scanning after success
+          parsedData = JSON.parse(decodedText);
         } catch {
-          setStatus("⚠️ Invalid QR Code");
+          // 2️⃣ Fallback: text format
+          if (decodedText.includes("Owner Name:")) {
+            const lines = decodedText.split("\n");
+
+            const extract = (label) =>
+              lines.find(l => l.startsWith(label))?.split(":").slice(1).join(":").trim();
+
+            parsedData = {
+              ownerName: extract("Owner Name"),
+              address: extract("Address"),
+              phone: extract("Phone Number"),
+              plateNumber: extract("Plate Number"),
+              serialNumber: extract("Serial Number"),
+              expirationDate: extract("Expiration Date"),
+            };
+          } else {
+            setStatus("⚠️ Invalid QR Code");
+            return;
+          }
         }
+
+        // 3️⃣ Expiration check
+        if (!parsedData.expirationDate || isExpired(parsedData.expirationDate)) {
+          setStatus("❌ QR Code Expired");
+          setScanResult(null);
+        } else {
+          const today = new Date();
+          const exp = new Date(parsedData.expirationDate + "T23:59:59");
+          const diff = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
+          setStatus(`✅ QR Code Valid — ${diff} day(s) left`);
+          setScanResult(parsedData);
+        }
+
+        scanner.clear();
       },
       (error) => {
         // silently ignore scan errors
