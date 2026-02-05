@@ -85,7 +85,10 @@ function QRScanner() {
       {scanResult && (
         <div>
           <p><strong>Name:</strong> {scanResult.ownerName}</p>
+          <p><strong>Address:</strong> {scanResult.address}</p>
+          <p><strong>Phone Number:</strong> {scanResult.phone}</p>
           <p><strong>Plate:</strong> {scanResult.plateNumber}</p>
+          <p><strong>Serial Number:</strong> {scanResult.serialNumber}</p>
           <p><strong>Expires:</strong> {scanResult.expirationDate}</p>
         </div>
       )}
