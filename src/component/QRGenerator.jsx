@@ -36,8 +36,8 @@ function QRGenerator() {
     if (!/^\d{11}$/.test(formData.phone))
       newErrors.phone = "Phone must be 11 digits";
 
-    if (!/^[A-Z]{3}-\d{3}-[A-Z]{3}$/i.test(formData.plate))
-      newErrors.plate = "Plate must be like ABC-123-XYZ";
+    if (!/^[A-Z]{3}-\d{3}-[A-Z]{2}$/i.test(formData.plate))
+      newErrors.plate = "Plate must be like ABC-123-XY";
 
     if (!formData.serial.trim()) newErrors.serial = "Serial number required";
     if (!formData.expDate) newErrors.expDate = "Expiration date required";
